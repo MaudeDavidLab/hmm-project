@@ -1,0 +1,37 @@
+#!/bin/bash
+
+if [ $# -ne 3 ]
+then
+  echo usage: ./fetchGenes name outputFileName geneAbrFile
+  exit 1
+fi
+
+name=$1
+output=$2
+seqFile=$3
+
+python getgenes_UPDATED.py $name $output $seqFile
+wait
+
+file1=$name"_ErrorFile.txt"
+file2=$name"_euk.txt"
+file3=$name".fasta"
+file4=$name"_prok.txt"
+
+
+input=$file4
+while IFS= read -r line
+do
+  url="http://rest.kegg.jp/get/"
+  endurl="/aaseq"
+  curl $url"$line"$endurl >> $2
+  wait
+  sleep 2
+done < "$input"
+
+
+mkdir $name
+mv $file1 $name
+mv $file2 $name
+mv $file3 $name
+mv $file4 $name
