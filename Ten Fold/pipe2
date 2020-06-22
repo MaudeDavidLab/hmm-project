@@ -1,0 +1,143 @@
+#!/bin/bash
+# Scripts Needed: 
+#	random_seq.py
+#	formatfasta.py
+#	90percent.py
+#	remove_noKO.py 
+
+if [ $# -ne 2 ]
+then 
+	echo usage: ./pipe fullsequencefile 10perNum
+	exit 1
+fi
+
+fullSeq=$1
+num=$2
+
+cp $fullSeq fullSequence_copy.fasta
+copyFull='fullSequence_copy.fasta'
+
+one='one'
+two='two'
+three='three'
+four='four'
+five='five'
+six='six'
+seven='seven'
+eight='eight'
+nine='nine'
+ten='ten'
+
+tenFile='10percent.fasta'
+nineFile='90percent.fasta'
+hold='temp03043043'
+
+# makes all the directories
+mkdir $one
+mkdir $two
+mkdir $three
+mkdir $four
+mkdir $five 
+mkdir $six
+mkdir $seven
+mkdir $eight
+mkdir $nine
+mkdir $ten
+
+func() {
+	# get 10% of the sequences from the full sequence folder
+	echo getting 10% of the sequences into $var/$tenFile
+	python random_seq.py $fullSeq $var/$tenFile $num
+	wait
+
+	# format the 10% folder
+	echo formatting $var/$tenFile
+	sed -i -e 's/>/\n>/g' $var/$tenFile
+	wait
+	sed -i '1d' $var/$tenFile
+	wait 
+
+	# get 90% of the sequences 
+	echo getting 90% of the sequences into $var/$nineFile
+	touch $var/$nineFile
+	python 90percent.py $copyFull $var/$tenFile $var/$nineFile
+	wait 
+
+	# formats the 10percent file so that there are new lines every 80 amino acids
+	echo formatting the $var/$tenFile so that only 80 amino acids per line
+	python formatFasta.py $var/$tenFile 80 
+	wait
+	rm -f $var/$tenFile
+	mv temp100030232 $var/$tenFile
+	wait 
+
+	# replace the fullSequence folder 
+	echo replace the fullsequence folder
+	touch $hold
+	python 90percent.py $fullSeq $var/$tenFile $hold
+	wait
+	rm -f $fullSeq
+	#touch $fullSeq
+	#fullSeq=$hold
+	mv $hold $fullSeq
+	rm -f $hold
+
+	# Removes the '*noKO' from the 10% file
+	echo removing the noKO from $var/$tenFile
+	tempFile='10percent_red.fasta'
+	touch $var/$tempFile
+	python remove_noKO.py $var/$tenFile $var/$tempFile
+	wait
+	newFile=original10.fasta
+	mv $var/$tenFile $var/$newFile
+	mv $var/$tempFile $var/$tenFile
+
+}
+
+var=$one
+func
+var=$two
+func
+var=$three
+func
+var=$four
+func
+var=$five
+func
+var=$six
+func
+var=$seven
+func
+var=$eight
+func
+var=$nine
+func
+
+##TEN
+echo getting the remaining sequences into $ten/$tenFile
+mv $fullSeq $ten/$tenFile
+mv $copyFull $fullSeq
+echo getting 90% of the sequences into $ten/$nineFile
+touch $ten/$nineFile
+python 90percent.py $fullSeq $ten/$tenFile $ten/$nineFile
+
+# Removes the '*noKO' from the 10% file
+tempFile='10percent_red.fasta'
+touch $ten/$tempFile
+python remove_noKO.py $ten/$tenFile $ten/$tempFile
+wait
+newFile=original10.fasta
+mv $ten/$tenFile $ten/$newFile
+mv $ten/$tempFile $ten/$tenFile
+wait 
+
+# Removes the scripts:
+#	random_seq.py
+#	formatfasta.py
+#	90percent.py
+#	remove_noKO.py 
+rm -f random_seq.py
+rm -f formatFasta.py
+rm -f 90percent.py
+rm -f remove_noKO.py
+wait

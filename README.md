@@ -5,3 +5,6 @@ Files stored within [Sequence Retrieval](https://github.com/MaudeDavidLab/hmm-pr
 
 ## 2 Format Sequences
 Files stored within [Format Sequences](https://github.com/MaudeDavidLab/hmm-project/tree/master/Format%20Sequences)
+
+## 3 Divide Across Ten Fold  
+Files stored within [Ten Fold](https://github.com/MaudeDavidLab/hmm-project/tree/master/Ten%20Fold)
