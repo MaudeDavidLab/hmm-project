@@ -1,0 +1,151 @@
+#!/bin/bash
+
+if [ $# -ne 4 ]
+then 
+	echo usage: ./pipe3 90percentNewickFile 90percentFastaFile 10percentFastaFile finalDir
+	exit 1
+fi
+
+koDir='90percentKO'
+alignedFileDir='alignedFiles'
+newickFile=$1
+FastaFile=$2
+tenpercFile=$3
+a=${newickFile%.*}
+outfile=""$a"_out"
+finalDir=$4
+
+# creates an initial colored tree
+python colorTree.py $newickFile $outfile
+wait
+#read -p "Press enter to continue"
+
+# propogates the sequences 
+hold='temp1000230'
+touch $hold
+outfile+='.xml'
+python propogate.py $outfile $hold
+wait
+rm -f $outfile
+mv temp1000230 $outfile
+wait  
+echo $outfile updated
+
+# divies up the colored branches into seperate files
+mkdir $koDir
+python splitToFile.py $outfile $koDir $FastaFile
+wait
+echo $koDir created and populated 
+
+# align each of the KO files
+for file in $koDir/*
+do
+	clustalw2 $file	
+done
+wait 
+
+# FILE management
+#  only keep the files that contains an alignment
+#  (no alignment if only 1 sequence)
+mkdir $alignedFileDir
+for file in $koDir/*.aln
+do 
+	if [[ $(wc -l <$file) -eq 0 ]]
+	then 
+		rm -f $file
+	fi
+done
+#  remove the trees (.dnd) 
+rm -f $koDir/*.dnd
+	
+#  move alignment files to another dir: alignedFiles
+mv $koDir/*.aln $alignedFileDir
+wait
+
+echo DONE ALIGNING
+
+# build hmmprofiles for the aligned files
+for file in $alignedFileDir/*
+do
+	hmmbuild $file.hmm $file
+done
+wait 
+
+#FILE MANAGEMENT
+# remove the alignment files
+rm -rf $alignedFileDir/*.aln
+wait 
+
+echo DONE BUILDING PROFILE
+
+# DONT NEED HMMPRESS IS USED WITH HMMSCAN NOT HMMSEARCH
+# hmmpress each of the hmmprofile files
+#for file in $alignedFileDir/* 
+#do
+#	hmmpress $file
+#done
+#wait
+
+#echo DONE WITH HMMPRESS
+
+# hmmsearch 
+hmmoutDir=hmmout
+mkdir $hmmoutDir
+mkdir $hmmoutDir/$alignedFileDir
+for file in $alignedFileDir/*.aln.hmm
+do
+	hmmsearch -E 10000000000000000000000000 --max --tblout $hmmoutDir/$file $file $tenpercFile
+
+done
+wait
+
+echo DONE WITH HMMSEARCH
+
+# gets all the files with hits 
+# finalResultsDir='final_results'
+# mkdir $finalResultsDir 
+for file in $hmmoutDir/$alignedFileDir/*
+do 
+	if [[ $(wc -l <$file) -eq 13 ]]
+	then 
+		rm -f $file
+	fi
+done
+wait 
+
+# get the missing sequences- the ones that hmmsearch didn't find 
+for file in $hmmoutDir/$alignedFileDir/*
+do
+	python getMissing.py $file $tenpercFile 
+	wait 
+done 
+wait 
+
+# generates the table 
+resultFile='results'
+touch $resultFile
+for file in $hmmoutDir/$alignedFileDir/*
+do 
+	python getRes.py $file $resultFile
+	wait
+done
+
+# adds the missing sequences to the results table 
+for file in ./*_missing.txt
+do 
+	cat $file >> $resultFile
+	wait
+done
+wait  
+
+# clean up....
+mkdir $finalDir
+mv $resultFile $finalDir/
+mv $alignedFileDir $finalDir/
+mv $koDir $finalDir
+mv 90percent_out.xml $finalDir/
+mv $finalResultsDir $finalDir/
+mv $hmmoutDir $finalDir/
+mv $newickFile $finalDir/
+mv $FastaFile $finalDir/
+mv $tenpercFile $finalDir/
