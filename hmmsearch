@@ -13,7 +13,10 @@ The second section is the Sequence top hits list. It is a list of top hits(sorte
 
 INSERT INFO HERE
 
+The first field in this section is the name of the target sequence, that is followed by the description. The last three bits are the raw score, the total e-value and the total number of domains detected in the sequence.
+
 DESCRIPTION OF ALL OF THE FIELDS IN THE HIT LIST
+
 
 ALIGNMENT OUTPUT
 
