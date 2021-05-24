@@ -5,4 +5,17 @@ To search the sequence databse, the command will look like this:
 > hmmsearch <hmmFilename> samples.fasta > hmmsamples.out
 
 After we observe the output and discuus the different sections that it comes in.
+The first section of the output file is the header. It has all of the infromation on what program you ran, on what and with what options
+
+INSERT HEADER HERE
+
+The second section is the Sequence top hits list. It is a list of top hits(sorted by e-value, most significant hit first) formatted in a BLAST- like style
+
+INSERT INFO HERE
+
+DESCRIPTION OF ALL OF THE FIELDS IN THE HIT LIST
+
+ALIGNMENT OUTPUT
+
+HMMSEARCH OUTPUT
 
