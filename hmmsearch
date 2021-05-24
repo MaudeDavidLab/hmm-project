@@ -1,0 +1,8 @@
+In order to search for new homologues using Profile HMM we will be using profiles that have already been built for this paper and we will be searching the file
+samples.fasta
+
+To search the sequence databse, the command will look like this:
+> hmmsearch <hmmFilename> samples.fasta > hmmsamples.out
+
+After we observe the output and discuus the different sections that it comes in.
+
