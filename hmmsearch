@@ -11,13 +11,19 @@ INSERT HEADER HERE
 
 The second section is the Sequence top hits list. It is a list of top hits(sorted by e-value, most significant hit first) formatted in a BLAST- like style
 
-INSERT INFO HERE
+INSERT SECOND SECTION IMAGE HERE
 
-The first field in this section is the name of the target sequence, that is followed by the description. The last three bits are the raw score, the total e-value and the total number of domains detected in the sequence.
+The first field in this section is the name of the target sequence, that is followed by the description. The last three bits are the raw score,
+the total e-value and the total number of domains detected in the sequence. By default every E-value over 10.0 is listed in the output.
 
-DESCRIPTION OF ALL OF THE FIELDS IN THE HIT LIST
+The second field is the domain top hits list, By default this section lists every sewuence with an E-value less than 10 and every domain with a non-zero score.
+Each domain detected in the serch output is categorized by E-value
 
+INSERT SECOND-FIELD IMAGE HERE.
 
+The first field is the name of the target sequence and the second field is the number of its domain.
+
+The fields marked "seq-f" and "seq-t" mean sequence from and sequence to: the start and end points of the alignment on the target sequence.
 ALIGNMENT OUTPUT
 
 HMMSEARCH OUTPUT
