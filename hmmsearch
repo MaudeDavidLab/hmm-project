@@ -23,8 +23,26 @@ INSERT SECOND-FIELD IMAGE HERE.
 
 The first field is the name of the target sequence and the second field is the number of its domain.
 
-The fields marked "seq-f" and "seq-t" mean sequence from and sequence to: the start and end points of the alignment on the target sequence.
-ALIGNMENT OUTPUT
+The fields marked "seq-f" and "seq-t" mean sequence from and sequence to: the start and end points of the alignment on the target sequence. What comes after these fields is a
+shorthand annotation that shows whether the alignment is "global" with respect to the sequence or not.
+Some of the shorthand is;
+.  - This means the alignment does not go all the way to the end.
+()/[] - This means the alignment makes it all the way to the end.
+..  - Means the alignment is local within the sequence.
+[.  - Means the alignment starts at the beginnign of the sequence but does not go all the way to the end.
+.]  - Means the alignment starts somewhere internally and goes all the way to the end.
+[]  -Means the aligment includes the entire sequnce.
+Thus.... GIVE THE EXPLANATIN BASED ON THE SHORT HAND YOU HAVE
+
+The next sections are the fields marked "hmm-f" and "hmm-t", these indicate the start and end points with respect to the consensus coordinates of the model, then the 
+followinf field is the ENTER THE SHORTHAND THAT IS PRESENT IN THE SEARCH.
+
+The final two fields are the raw score and the estimated E-value, for the isolated domain. Because of the method HMMER uses to correct raw scores for biased sequence 
+composition, the raw scores for the domains do not necessarily sum up to the raw score of the sequence.
+
+The next section is the alignment output. By default, every domain that appeared in the domain top hits list now appears as a BLAST-like alignment. For example:
+
+ALIGNMENT DATA HERE OUTPUT
 
 HMMSEARCH OUTPUT
 
