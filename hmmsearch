@@ -44,5 +44,22 @@ The next section is the alignment output. By default, every domain that appeared
 
 ALIGNMENT DATA HERE OUTPUT
 
-HMMSEARCH OUTPUT
+The top line is the HMM consensus. The amino acid shown for the consensus is the highest probability amino acid at that position according to the HMM (not necessarily the highest scoring amino acid, though). 
+Capital letters mean ``highly conserved'' residues: those with a probability of > 0.5 for protein models, or > 0.9 for DNA models.
+
+The center line shows letters for ``exact'' matches to the highest probability residue in the HMM, or a ``+'' when the match has a positive score and is therefore considered to be 
+``conservative'' according to the HMM's view of this particular position in the model - not the usual definition of conservative changes in general.
+
+The third line shows the actual sequence.
+
+The next sections the outpus is the score histogram. It shows a histogram with raw score increasing along the Y axis, and the number of sequence hits represented as a bar along 
+the X axis. In our example here, since there's only a single sequence, the histogram is very boring:
+
+SHOW THE HISTOGRAM
+
+See how the histogram shows the sequence hits and not the domain hits.
+
+You can skip over the hmmsearch output:
+
+SHOW THE HMMSEARCH OUTPUT
 
